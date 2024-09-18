@@ -1,3 +1,6 @@
+// MainActivity.kt
+package com.example.eac12
+
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -9,32 +12,32 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import com.example.eac12.ui.theme.EAC12Theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import com.example.eac12.ui.theme.EAC12Theme
+import androidx.compose.runtime.mutableStateListOf
 
 // ViewModel para gestionar las etapas del ciclo de vida
 class LifecycleViewModel : ViewModel() {
-    private val _lifecycleEvents = mutableStateOf<List<String>>(emptyList())
-    val lifecycleEvents: List<String> by _lifecycleEvents
+    // Llista mutable observable
+    private val _lifecycleEvents = mutableStateListOf<String>()
+    val lifecycleEvents: List<String> get() = _lifecycleEvents
 
+    // Funció per afegir una nova etapa
     fun addEvent(event: String) {
-        _lifecycleEvents.value = _lifecycleEvents.value + event
+        _lifecycleEvents.add(event)
     }
 
+    // Funció per resetejar les etapes
     fun resetEvents() {
-        _lifecycleEvents.value = emptyList()
+        _lifecycleEvents.clear()
     }
 }
 
-// Actividad principal que captura el ciclo de vida y actualiza el ViewModel
 class MainActivity : ComponentActivity() {
     private val lifecycleViewModel: LifecycleViewModel by viewModels()
 
@@ -44,7 +47,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             EAC12Theme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    LifecycleMonitorScreen(lifecycleViewModel)
+                    LifecycleMonitorScreen(viewModel = lifecycleViewModel)
                 }
             }
         }
@@ -86,7 +89,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// Composable para mostrar la lista de eventos y el botón de reinicio
+// Composable per mostrar la llista d'esdeveniments i el botó de reinici
 @Composable
 fun LifecycleMonitorScreen(viewModel: LifecycleViewModel) {
     Column(
@@ -114,8 +117,12 @@ fun LifecycleMonitorScreen(viewModel: LifecycleViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    val viewModel = LifecycleViewModel()
-    viewModel.addEvent("Preview Event 1")
-    viewModel.addEvent("Preview Event 2")
-    LifecycleMonitorScreen(viewModel)
+    EAC12Theme {
+        // Crea un ViewModel fictici per a la vista prèvia
+        val viewModel = LifecycleViewModel().apply {
+            addEvent("Preview Event 1")
+            addEvent("Preview Event 2")
+        }
+        LifecycleMonitorScreen(viewModel)
+    }
 }
