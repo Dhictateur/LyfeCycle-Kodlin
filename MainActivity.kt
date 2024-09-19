@@ -27,12 +27,12 @@ class LifecycleViewModel : ViewModel() {
     private val _lifecycleEvents = mutableStateListOf<String>()
     val lifecycleEvents: List<String> get() = _lifecycleEvents
 
-    // Funció per afegir una nova etapa
+    // Funciona para añadir eventos en pantalla
     fun addEvent(event: String) {
         _lifecycleEvents.add(event)
     }
 
-    // Funció per resetejar les etapes
+    // Resetar los eventos
     fun resetEvents() {
         _lifecycleEvents.clear()
     }
@@ -47,12 +47,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             EAC12Theme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                    // En arranque activamos la funcion para mostrar los eventos
                     LifecycleMonitorScreen(viewModel = lifecycleViewModel)
                 }
             }
         }
     }
 
+    // Definimos cada evento que podria pasar con su nombre
     override fun onStart() {
         super.onStart()
         logAndAddEvent("onStart")
@@ -89,7 +91,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// Composable per mostrar la llista d'esdeveniments i el botó de reinici
+// Composable per mostrar lista de eventos i el boton para resetear
 @Composable
 fun LifecycleMonitorScreen(viewModel: LifecycleViewModel) {
     Column(
@@ -114,6 +116,7 @@ fun LifecycleMonitorScreen(viewModel: LifecycleViewModel) {
     }
 }
 
+//Preview con ejemplos...
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
